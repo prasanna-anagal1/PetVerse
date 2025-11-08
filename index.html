@@ -1,841 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>PetVerse — Animal Welfare & Community Support</title>
-<meta name="description" content="PetVerse connects pet owners, adopters, shelters, volunteers, and community members on one platform." />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23735AE5' d='M32 10c8 0 11 5 12 8 1 3 1 6-1 10-1 1-2 3-3 4-2 2-2 3-1 6 1 4 1 6-2 7-5 2-11-1-14-6-3-4-4-8-2-12 1-3 2-6 6-9 2-1 4-2 5-2z'/%3E%3Ccircle fill='%2399A1FF' cx='16' cy='18' r='5'/%3E%3Ccircle fill='%2399A1FF' cx='48' cy='18' r='5'/%3E%3Ccircle fill='%2399A1FF' cx='22' cy='10' r='4'/%3E%3Ccircle fill='%2399A1FF' cx='42' cy='10' r='4'/%3E%3C/svg%3E">
-<style>
-  :root{
-    --bg: #0b0e14;
-    --panel: #111520;
-    --text: #e6e7ee;
-    --muted: #a9b0c6;
-    --brand: #735AE5;      /* "bewelo" theme primary */
-    --brand-2:#23D2A7;     /* accent */
-    --stroke:#24293a;
-    --ok:#23D2A7;
-    --warn:#FFB020;
-    --bad:#FF4D4D;
-    --chip:#1a2030;
-    --card:#0f1422;
-    --shadow: 0 10px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.02);
-    --radius: 18px;
-  }
-  @media (prefers-color-scheme: light){
-    :root{
-      --bg:#f7f8fc; --panel:#ffffff; --text:#0b0e14; --muted:#5a6174; --stroke:#e8ebf5; --card:#ffffff; --chip:#f0f2fa; --shadow:0 10px 30px rgba(12,18,28,.06), inset 0 1px 0 #fff;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PetPal 🐾 | Adopt. Love. Repeat.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Baloo 2', cursive;
+      background-color: #fff9f0;
+      color: #333;
     }
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;background:linear-gradient(180deg,var(--bg),#0c1220 60%,var(--bg));
-    color:var(--text); font: 15px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
-  }
-  .container{max-width:1100px;margin:0 auto;padding:20px}
-  header{
-    position:sticky;top:0;z-index:50;backdrop-filter: blur(10px);
-    background: color-mix(in oklab, var(--panel) 85%, transparent);
-    border-bottom:1px solid var(--stroke);
-  }
-  .nav{
-    display:flex; align-items:center; gap:12px; justify-content:space-between; padding:14px 0;
-  }
-  .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit}
-  .brand .logo{
-    width:36px;height:36px;border-radius:12px; display:grid;place-items:center;
-    background: radial-gradient(100% 100% at 0% 0%, var(--brand) 0%, #9E86FF 60%, #B4A3FF 100%);
-    box-shadow: var(--shadow);
-  }
-  .brand h1{font-size:18px;margin:0;font-weight:800;letter-spacing:.3px}
-  .brand small{display:block;font-size:11px;color:var(--muted);font-weight:600}
-  .nav-right{display:flex; gap:10px; align-items:center}
-  .chip{
-    background:var(--chip); border:1px solid var(--stroke); border-radius:999px; padding:8px 12px; display:inline-flex; gap:8px; align-items:center; box-shadow:var(--shadow)
-  }
-  select, input, textarea, button{
-    font:inherit; color:inherit; background:var(--card); border:1px solid var(--stroke); border-radius:12px; padding:10px 12px;
-  }
-  select, input, textarea{width:100%}
-  button{cursor:pointer}
-  .btn{
-    background:linear-gradient(180deg, color-mix(in oklab,var(--brand) 90%, #fff 10%), var(--brand));
-    border:none; color:white; font-weight:700; padding:10px 14px; border-radius:12px; box-shadow: var(--shadow);
-  }
-  .btn-outline{background:transparent;border:1px solid var(--brand);color:var(--brand);font-weight:700}
-  .btn-ghost{background:transparent;border:1px dashed var(--stroke);color:var(--text)}
-  .grid{display:grid; gap:16px}
-  .row{display:flex; gap:12px; flex-wrap:wrap}
-  .panel{
-    background:var(--panel); border:1px solid var(--stroke); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow)
-  }
-  .tabs{display:flex; gap:8px; flex-wrap:wrap}
-  .tab{padding:10px 12px; border-radius:12px; border:1px solid var(--stroke); background:var(--card); cursor:pointer; font-weight:700}
-  .tab[aria-selected="true"]{border-color:transparent; background:linear-gradient(180deg,#1a1f2f, #141a29); outline:2px solid color-mix(in oklab,var(--brand) 40%, transparent); }
-  .cards{display:grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap:16px}
-  .card{background:var(--card); border:1px solid var(--stroke); border-radius:16px; overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column}
-  .card img{width:100%; height:160px; object-fit:cover; background:#111}
-  .card .content{padding:12px; display:flex; flex-direction:column; gap:8px}
-  .badge{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:6px 8px; border-radius:999px; background:var(--chip); border:1px solid var(--stroke)}
-  .status{font-weight:800}
-  .status.Available{color:var(--ok)}
-  .status.Requested{color:#5aa3ff}
-  .status.Approved{color:#b28bff}
-  .status.Adopted{color:var(--brand-2)}
-  .split{display:grid; grid-template-columns: 1.2fr .8fr; gap:16px}
-  @media (max-width:900px){ .split{grid-template-columns: 1fr} .nav{align-items:start; gap:8px}}
-  .table{width:100%; border-collapse:collapse; font-size:14px}
-  .table th,.table td{border-bottom:1px solid var(--stroke); padding:10px 8px; text-align:left}
-  .table th{color:var(--muted); font-weight:800; text-transform:uppercase; letter-spacing:.04em}
-  .empty{border:1px dashed var(--stroke); padding:20px; border-radius:12px; text-align:center; color:var(--muted)}
-  .footer{color:var(--muted); font-size:12px; margin:24px 0 10px}
-  .sr-only{position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0;}
-  .progress{height:8px; background:var(--chip); border:1px solid var(--stroke); border-radius:999px; overflow:hidden}
-  .progress > i{display:block; height:100%; background:linear-gradient(90deg,var(--brand),#9E86FF); width:0%}
-  .kbd{font-family: ui-monospace, Menlo, Consolas, monospace; background:var(--chip); border:1px solid var(--stroke); padding:2px 6px; border-radius:6px}
-  .mono{font-family: ui-monospace, Menlo, Consolas, monospace}
-  .pill-group{display:flex; gap:8px; flex-wrap:wrap}
-  .pill{padding:6px 10px; border-radius:999px; border:1px solid var(--stroke); background:var(--chip); font-size:12px}
-  .toast{position:fixed; right:16px; bottom:16px; background:var(--panel); border:1px solid var(--stroke); padding:12px 14px; border-radius:12px; box-shadow:var(--shadow); display:none}
-  .link{color:var(--brand); text-decoration:none}
-</style>
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ff6f61; /* bright coral red */
+      color: #fff;
+      padding: 15px 40px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .navbar .logo {
+      font-weight: bold;
+      font-size: 2rem;
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar a {
+      color: #fff;
+      font-weight: bold;
+      transition: color 0.3s;
+      font-size: 1.1rem;
+    }
+
+    .navbar a:hover {
+      color: #ffd700; /* bright yellow */
+    }
+
+    /* Hero Section */
+    .hero {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 80vh;
+      background: linear-gradient(120deg, #ffcc70, #ff6f61);
+      color: #fff;
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 700px;
+      padding: 30px;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      line-height: 1.6;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+
+    /* Features Section */
+    .features {
+      padding: 60px 20px;
+      text-align: center;
+      background-color: #ffe0b2; /* bright orange-ish */
+    }
+
+    .features h2 {
+      font-size: 2.5rem;
+      margin-bottom: 50px;
+      color: #ff4500; /* bright orange-red */
+    }
+
+    .cards {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background-color: #fff176; /* bright yellow */
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      padding: 25px;
+      width: 260px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+
+    .card img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      border: 3px solid #ff6f61;
+      background-color: #fff;
+      padding: 5px;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+      color: #d84315; /* darker orange */
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.4;
+    }
+
+    /* Card button */
+    .card-btn {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 8px 15px;
+      background-color: #ff6f61;
+      color: #fff;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .card-btn:hover {
+      background-color: #ffd700;
+      color: #333;
+      transform: scale(1.05);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ff6f61;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    /* Responsive */
+    @media(max-width: 768px){
+      .cards {
+        flex-direction: column;
+        align-items: center;
+      }
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+    }
+
+  </style>
 </head>
 <body>
-<header>
-  <div class="container nav" role="navigation" aria-label="Top">
-    <a class="brand" href="#" aria-label="PetVerse home">
-      <span class="logo" aria-hidden="true">🐾</span>
-      <div>
-        <h1>PetVerse</h1>
-        <small id="subtitle">Animal Welfare & Community Support</small>
+  <nav class="navbar">
+    <div class="logo">PetPal 🐾</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="pets.html">Adopt</a></li>
+      <li><a href="login.html">Login / Signup</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-content">
+      <h1>Welcome to PetPal!</h1>
+      <p>Brighten a life with love and care. Explore adoption, volunteer, or donate — your kindness makes a difference!</p>
+    </div>
+  </header>
+
+  <section class="features">
+    <h2>What You Can Do</h2>
+    <div class="cards">
+      <div class="card">
+        <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Adoption">
+        <h3>Adopt a Pet</h3>
+        <p>Find your perfect furry friend and give them a forever home.</p>
+        <a href="pets.html" class="card-btn">Go to Adoption</a>
       </div>
-    </a>
-    <div class="nav-right">
-      <label class="chip" aria-label="Language selector">
-        <span class="sr-only">Language</span>
-        <svg width="16" height="16" role="img" aria-label="globe" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2m-1 17.93A8.001 8.001 0 0 1 4.07 13H7c.2 2.28 1.01 4.33 2 6v.93M4.07 11A8.001 8.001 0 0 1 11 4.07V5c-1.21.82-2.2 2.87-2.65 6H4.07M13 4.07A8.001 8.001 0 0 1 19.93 11H16.65C16.2 7.87 15.21 5.82 14 5V4.07M19.93 13A8.001 8.001 0 0 1 13 19.93V19c1.21-.82 2.2-2.87 2.65-6h3.28M9.35 13c.45 3.13 1.44 5.18 2.65 6c1.21-.82 2.2-2.87 2.65-6H9.35Z"/></svg>
-        <select id="lang">
-          <option value="en">English</option>
-          <option value="kn">ಕನ್ನಡ (Kannada)</option>
-          <option value="hi">हिन्दी (Hindi)</option>
-        </select>
-      </label>
-      <button id="themeToggle" class="chip btn-ghost" aria-pressed="false">
-        <span id="themeLabel">Auto</span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<main class="container">
-  <section class="panel" aria-label="Tabs">
-    <div class="tabs" role="tablist" aria-label="Primary">
-      <button class="tab" role="tab" aria-selected="true" data-tab="adopt">🐶 <span data-i18n="tab.adopt">Adopt</span></button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="donate">🎁 <span data-i18n="tab.donate">Donate</span></button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="forum">💬 <span data-i18n="tab.forum">Forum</span></button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="events">📅 <span data-i18n="tab.events">Events</span></button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="lost">🧭 <span data-i18n="tab.lost">Lost & Found</span></button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="profile">👤 <span data-i18n="tab.profile">Profile</span></button>
-      <span class="chip" title="Demo build">v0.1 • Bewelo theme</span>
-    </div>
-  </section>
-
-  <!-- Stakeholders -->
-  <section class="panel" id="stakeholders">
-    <h2>Stakeholders</h2>
-    <div class="pill-group" aria-hidden="true">
-      <span class="pill">Pet Owners</span>
-      <span class="pill">Adoptive Users</span>
-      <span class="pill">Shelters / NGOs</span>
-      <span class="pill">Volunteers</span>
-      <span class="pill">Community Users</span>
-    </div>
-    <div class="grid" style="margin-top:12px">
-      <div class="panel" style="padding:0">
-        <table class="table" aria-label="Stakeholder roles">
-          <thead><tr>
-            <th>Stakeholder</th><th>Role in System</th>
-          </tr></thead>
-          <tbody>
-            <tr><td>Pet Owners</td><td>Post pets for adoption or lost pets</td></tr>
-            <tr><td>Adoptive Users</td><td>Request to adopt / search pets</td></tr>
-            <tr><td>Animal Shelters / NGOs</td><td>Manage pet listings & events</td></tr>
-            <tr><td>Volunteers</td><td>Participate in rescue & adoption drives</td></tr>
-            <tr><td>Community Users</td><td>Chat, donate, support awareness</td></tr>
-          </tbody>
-        </table>
+      <div class="card">
+        <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Volunteer">
+        <h3>Volunteer</h3>
+        <p>Help animals, organize events, and support the community.</p>
+        <a href="login.html" class="card-btn">Sign Up to Volunteer</a>
+      </div>
+      <div class="card">
+        <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Donate">
+        <h3>Donate</h3>
+        <p>Contribute to food, shelter, and care for rescued pets.</p>
+        <a href="login.html" class="card-btn">Donate Now</a>
       </div>
     </div>
   </section>
 
-  <!-- ADOPTION -->
-  <section id="adopt" class="panel" role="tabpanel" aria-labelledby="tab-adopt">
-    <div class="split">
-      <div>
-        <h2 data-i18n="adopt.title">Find a friend to adopt</h2>
-        <div class="row" style="margin-bottom:10px">
-          <input id="adoptSearch" placeholder="Search by name/breed…" aria-label="Search pets" />
-          <select id="adoptFilterSpecies" aria-label="Filter species">
-            <option value="">All species</option>
-            <option>Dog</option><option>Cat</option><option>Bird</option>
-          </select>
-          <select id="adoptFilterStatus" aria-label="Filter status">
-            <option value="">Any status</option>
-            <option>Available</option>
-            <option>Requested</option>
-            <option>Approved</option>
-            <option>Adopted</option>
-          </select>
-          <button id="newPetBtn" class="btn">+ <span data-i18n="adopt.post">Post a Pet</span></button>
-        </div>
-        <div class="cards" id="petCards" aria-live="polite"></div>
-      </div>
-      <aside>
-        <div class="panel">
-          <h3 data-i18n="adopt.how">Adoption flow</h3>
-          <ol>
-            <li><b>Available</b> → <b>Requested</b> (user applies)</li>
-            <li><b>Requested</b> → <b>Approved</b> (shelter/owner)</li>
-            <li><b>Approved</b> → <b>Adopted</b> (handover)</li>
-          </ol>
-          <div class="progress" aria-label="Adoption progress demo"><i id="adoptProgress"></i></div>
-          <p class="muted" style="color:var(--muted);margin-top:8px">Click status chips on cards to advance or revert (demo).</p>
-        </div>
-        <div class="panel">
-          <h3 data-i18n="adopt.tips">Quick tips</h3>
-          <ul>
-            <li>Check vaccination & age fit.</li>
-            <li>Meet & greet before approval.</li>
-            <li>Sign a simple adoption pledge.</li>
-          </ul>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <!-- DONATIONS -->
-  <section id="donate" class="panel" role="tabpanel" hidden>
-    <h2 data-i18n="donate.title">Donation Support</h2>
-    <div class="split">
-      <div>
-        <div class="cards" id="needsList"></div>
-      </div>
-      <aside>
-        <div class="panel">
-          <h3 data-i18n="donate.postNeed">Shelter: Post a need</h3>
-          <div class="grid">
-            <input id="needTitle" placeholder="e.g., Puppy food (10 kg)" />
-            <input id="needOrg" placeholder="Shelter/NGO name" />
-            <input id="needContact" placeholder="Contact (phone/email)" />
-            <input id="needGoal" type="number" min="1" placeholder="Goal units / ₹" />
-            <select id="needType">
-              <option value="item">Item</option>
-              <option value="money">Money</option>
-            </select>
-            <button id="addNeed" class="btn">+ Add Need</button>
-          </div>
-        </div>
-        <div class="panel">
-          <h3 data-i18n="donate.note">Note</h3>
-          <p>Donors will see a confirmation and the progress bar will update.</p>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <!-- FORUM -->
-  <section id="forum" class="panel" role="tabpanel" hidden>
-    <h2 data-i18n="forum.title">Community Chat / Discussion</h2>
-    <div class="row">
-      <select id="channel">
-        <option>General</option>
-        <option>Lost Pets</option>
-        <option>Adoption Help</option>
-        <option>Health</option>
-        <option>Training</option>
-      </select>
-      <input id="postTitle" placeholder="Post title…" />
-      <input id="postBody" placeholder="Share tips, questions…" />
-      <button id="addPost" class="btn">Post</button>
-    </div>
-    <div id="posts" class="grid" style="margin-top:12px"></div>
-  </section>
-
-  <!-- EVENTS / VOLUNTEER -->
-  <section id="events" class="panel" role="tabpanel" hidden>
-    <h2 data-i18n="events.title">Volunteer & Events</h2>
-    <div class="split">
-      <div id="eventCards" class="cards"></div>
-      <aside>
-        <div class="panel">
-          <h3 data-i18n="events.create">Create event (NGO)</h3>
-          <div class="grid">
-            <input id="evTitle" placeholder="e.g., Vaccination Camp" />
-            <input id="evOrg" placeholder="Organizer" />
-            <input id="evDate" type="date" />
-            <input id="evLocation" placeholder="Location" />
-            <textarea id="evDesc" rows="3" placeholder="Short description"></textarea>
-            <button id="addEvent" class="btn">+ Add Event</button>
-          </div>
-        </div>
-        <div class="panel">
-          <h3>Badges</h3>
-          <p>Volunteer hours unlock badges shown on your profile.</p>
-          <div class="pill-group">
-            <span class="pill">Helper</span><span class="pill">Rescuer</span><span class="pill">Champion</span>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <!-- LOST & FOUND -->
-  <section id="lost" class="panel" role="tabpanel" hidden>
-    <h2 data-i18n="lost.title">Lost & Found Pets</h2>
-    <div class="split">
-      <div>
-        <div class="row">
-          <select id="lostSort">
-            <option value="newest">Newest first</option>
-            <option value="oldest">Oldest first</option>
-          </select>
-          <input id="lostSearch" placeholder="Search by area/breed…" />
-        </div>
-        <div id="lostList" class="cards" style="margin-top:12px"></div>
-      </div>
-      <aside>
-        <div class="panel">
-          <h3 data-i18n="lost.post">Post missing/found</h3>
-          <div class="grid">
-            <select id="lostType">
-              <option value="Missing">Missing</option>
-              <option value="Found">Found</option>
-            </select>
-            <input id="lostPetName" placeholder="Pet name (if known)" />
-            <input id="lostBreed" placeholder="Breed / type" />
-            <input id="lostLocation" placeholder="Area / City" />
-            <input id="lostMarks" placeholder="Special identifiers (e.g., blue collar)" />
-            <input id="lostImage" placeholder="Image URL (optional)" />
-            <button id="addLost" class="btn">+ Post</button>
-          </div>
-        </div>
-        <div class="panel">
-          <h3 data-i18n="lost.tip">Tip</h3>
-          <p>Add clear photos and last-seen time. Others can report sightings.</p>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <!-- PROFILE -->
-  <section id="profile" class="panel" role="tabpanel" hidden>
-    <h2 data-i18n="profile.title">Your Profile</h2>
-    <div class="split">
-      <div class="panel">
-        <h3 data-i18n="profile.info">Profile info</h3>
-        <div class="grid">
-          <input id="pfName" placeholder="Name" />
-          <input id="pfLocation" placeholder="Location" />
-          <select id="pfContact">
-            <option value="email">Email</option>
-            <option value="phone">Phone</option>
-            <option value="in-app">In-app</option>
-          </select>
-          <button id="saveProfile" class="btn">Save</button>
-        </div>
-        <p style="margin-top:8px;color:var(--muted)">Contact preference shows on your requests & donations.</p>
-      </div>
-      <aside class="panel">
-        <h3>Activity</h3>
-        <ul id="activity" class="mono" style="list-style: none; padding-left:0; margin:0; display:grid; gap:6px"></ul>
-        <h3 style="margin-top:16px">Volunteer level</h3>
-        <div class="pill-group" id="badges"></div>
-      </aside>
-    </div>
-  </section>
-
-  <p class="footer">This is a front-end demo. No real payments or messaging. Data is stored locally in your browser.</p>
-</main>
-
-<div class="toast" role="status" aria-live="polite" id="toast"></div>
-
-<script>
-/* =========================
-   i18n (English, Kannada, Hindi)
-   ========================= */
-const I18N = {
-  en: {
-    "tab.adopt":"Adopt","tab.donate":"Donate","tab.forum":"Forum","tab.events":"Events","tab.lost":"Lost & Found","tab.profile":"Profile",
-    "adopt.title":"Find a friend to adopt","adopt.post":"Post a Pet","adopt.how":"Adoption flow","adopt.tips":"Quick tips",
-    "donate.title":"Donation Support","donate.postNeed":"Shelter: Post a need","donate.note":"Note",
-    "forum.title":"Community Chat / Discussion",
-    "events.title":"Volunteer & Events","events.create":"Create event (NGO)",
-    "lost.title":"Lost & Found Pets","lost.post":"Post missing/found","lost.tip":"Tip",
-    "profile.title":"Your Profile","profile.info":"Profile info"
-  },
-  kn: {
-    "tab.adopt":"ದತ್ತು","tab.donate":"ದೇಣಿಗೆ","tab.forum":"ಚರ್ಚಾ ವೇದಿಕೆ","tab.events":"ಕಾರ್ಯಕ್ರಮಗಳು","tab.lost":"ಕಾಣೆಯಾದವು","tab.profile":"ಪ್ರೊಫೈಲ್",
-    "adopt.title":"ದತ್ತಕ್ಕೆ ಸ್ನೇಹಿತನನ್ನು ಹುಡುಕಿ","adopt.post":"ಪ್ರಾಣಿಯನ್ನು ಪೋಸ್ಟ್ ಮಾಡಿ","adopt.how":"ದತ್ತು ಪ್ರಕ್ರಿಯೆ","adopt.tips":"ತ್ವರಿತ ಸಲಹೆಗಳು",
-    "donate.title":"ದೇಣಿಗೆ ಬೆಂಬಲ","donate.postNeed":"ಶೆಲ್ಟರ್: ಅಗತ್ಯವನ್ನು ಪೋಸ್ಟ್ ಮಾಡಿ","donate.note":"ಸೂಚನೆ",
-    "forum.title":"ಸಮುದಾಯ ಚರ್ಚೆ",
-    "events.title":"ಸ್ವಯಂಸೇವಕ & ಕಾರ್ಯಕ್ರಮಗಳು","events.create":"ಕಾರ್ಯಕ್ರಮ ಸೃಷ್ಟಿ (ಎನ್‌ಜಿಒ)",
-    "lost.title":"ಕಾಣೆಯಾದ & ಸಿಕ್ಕ ಪ್ರಾಣಿಗಳು","lost.post":"ಕಾಣೆಯಾದ/ಸಿಕ್ಕಿದ್ದು ಪೋಸ್ಟ್ ಮಾಡಿ","lost.tip":"ಸಲಹೆ",
-    "profile.title":"ನಿಮ್ಮ ಪ್ರೊಫೈಲ್","profile.info":"ಪ್ರೊಫೈಲ್ ಮಾಹಿತಿ"
-  },
-  hi: {
-    "tab.adopt":"गोद लें","tab.donate":"दान","tab.forum":"फ़ोरम","tab.events":"इवेंट","tab.lost":"लॉस्ट & फाउंड","tab.profile":"प्रोफ़ाइल",
-    "adopt.title":"गोद लेने के लिए दोस्त खोजें","adopt.post":"पालतू जोड़ें","adopt.how":"गोद लेने की प्रक्रिया","adopt.tips":"त्वरित सुझाव",
-    "donate.title":"दान सहायता","donate.postNeed":"शेल्टर: आवश्यकता पोस्ट करें","donate.note":"नोट",
-    "forum.title":"समुदाय चर्चा",
-    "events.title":"स्वयंसेवा व कार्यक्रम","events.create":"इवेंट बनाएँ (NGO)",
-    "lost.title":"लॉस्ट & फाउंड पालतू","lost.post":"मिसिंग/फाउंड पोस्ट करें","lost.tip":"सुझाव",
-    "profile.title":"आपकी प्रोफ़ाइल","profile.info":"प्रोफ़ाइल जानकारी"
-  }
-};
-function applyI18n(lang){
-  document.querySelectorAll("[data-i18n]").forEach(el=>{
-    const k = el.getAttribute("data-i18n");
-    if(I18N[lang]?.[k]) el.textContent = I18N[lang][k];
-  });
-  localStorage.setItem("petverse.lang", lang);
-}
-document.getElementById("lang").addEventListener("change", e=> applyI18n(e.target.value));
-applyI18n(localStorage.getItem("petverse.lang") || "en");
-document.getElementById("lang").value = localStorage.getItem("petverse.lang") || "en";
-
-/* =========================
-   Theme toggle (System/Light/Dark cycle)
-   ========================= */
-const themeBtn = document.getElementById("themeToggle");
-const themeLabel = document.getElementById("themeLabel");
-const THEME_ORDER = ["auto","light","dark"];
-function setTheme(mode){
-  document.documentElement.dataset.theme = mode;
-  if(mode==="light"){ document.documentElement.style.colorScheme="light"; }
-  else if(mode==="dark"){ document.documentElement.style.colorScheme="dark"; }
-  else { document.documentElement.style.colorScheme="normal"; }
-  themeLabel.textContent = mode[0].toUpperCase()+mode.slice(1);
-  localStorage.setItem("petverse.theme", mode);
-}
-let savedTheme = localStorage.getItem("petverse.theme") || "auto"; setTheme(savedTheme);
-themeBtn.addEventListener("click", ()=>{
-  const i = THEME_ORDER.indexOf(document.documentElement.dataset.theme || "auto");
-  const next = THEME_ORDER[(i+1)%THEME_ORDER.length];
-  setTheme(next);
-});
-
-/* =========================
-   State (localStorage-backed)
-   ========================= */
-const State = {
-  pets: JSON.parse(localStorage.getItem("petverse.pets") || "[]"),
-  needs: JSON.parse(localStorage.getItem("petverse.needs") || "[]"),
-  posts: JSON.parse(localStorage.getItem("petverse.posts") || "[]"),
-  events: JSON.parse(localStorage.getItem("petverse.events") || "[]"),
-  lost: JSON.parse(localStorage.getItem("petverse.lost") || "[]"),
-  profile: JSON.parse(localStorage.getItem("petverse.profile") || '{"name":"Guest","location":"","contact":"in-app","hours":0,"badges":[]}'),
-  activity: JSON.parse(localStorage.getItem("petverse.activity") || "[]")
-};
-function persist(){ localStorage.setItem("petverse.pets", JSON.stringify(State.pets));
-  localStorage.setItem("petverse.needs", JSON.stringify(State.needs));
-  localStorage.setItem("petverse.posts", JSON.stringify(State.posts));
-  localStorage.setItem("petverse.events", JSON.stringify(State.events));
-  localStorage.setItem("petverse.lost", JSON.stringify(State.lost));
-  localStorage.setItem("petverse.profile", JSON.stringify(State.profile));
-  localStorage.setItem("petverse.activity", JSON.stringify(State.activity));
-}
-function logActivity(msg){
-  State.activity.unshift({msg, at: new Date().toLocaleString()});
-  State.activity = State.activity.slice(0, 50);
-  persist(); renderProfile();
-}
-function toast(msg){
-  const t = document.getElementById("toast");
-  t.textContent = msg; t.style.display = "block";
-  setTimeout(()=> t.style.display = "none", 2200);
-}
-
-/* =========================
-   Seed demo data (once)
-   ========================= */
-if(!localStorage.getItem("petverse.seeded")){
-  State.pets = [
-    {id: crypto.randomUUID(), name:"Milo", species:"Dog", breed:"Indie", age:"1y 2m", vaccinated:true, status:"Available", img:"https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1200&auto=format&fit=crop"},
-    {id: crypto.randomUUID(), name:"Luna", species:"Cat", breed:"Tabby", age:"2y", vaccinated:true, status:"Available", img:"https://images.unsplash.com/photo-1595433707802-6b2626ef1c86?q=80&w=1200&auto=format&fit=crop"},
-    {id: crypto.randomUUID(), name:"Rio", species:"Bird", breed:"Parakeet", age:"8m", vaccinated:false, status:"Available", img:"https://images.unsplash.com/photo-1525253013412-55c1a69a5738?q=80&w=1200&auto=format&fit=crop"}
-  ];
-  State.needs = [
-    {id: crypto.randomUUID(), title:"Puppy food (10 kg)", org:"Happy Tails Shelter", contact:"help@happytails.org", type:"item", goal:10, progress:3},
-    {id: crypto.randomUUID(), title:"Medical fund", org:"Street Paws NGO", contact:"+91-90000 00000", type:"money", goal:20000, progress:6500}
-  ];
-  State.posts = [
-    {id:crypto.randomUUID(), channel:"General", title:"Summer heat tips", body:"Keep bowls full, avoid noon walks.", comments:["Great reminder!","Add paw balm recs?"], at:Date.now()},
-    {id:crypto.randomUUID(), channel:"Training", title:"Leash pulling fix?", body:"What worked for your Indie?", comments:["Harness + rewards.","Short sessions."], at:Date.now()-86400000}
-  ];
-  State.events = [
-    {id:crypto.randomUUID(), title:"Vaccination Camp", org:"BlueCross", date:new Date(Date.now()+86400000*7).toISOString().slice(0,10), location:"Indiranagar", desc:"Free anti-rabies shots.", volunteers:5},
-    {id:crypto.randomUUID(), title:"Beach Clean + Rescue Drive", org:"K9 Care", date:new Date(Date.now()+86400000*14).toISOString().slice(0,10), location:"Panambur", desc:"Clean-up & awareness.", volunteers:12}
-  ];
-  State.lost = [
-    {id:crypto.randomUUID(), type:"Missing", name:"Chintu", breed:"Indie", location:"HSR Layout", marks:"Blue collar", img:"https://images.unsplash.com/photo-1563460716037-460a3ad24ba9?q=80&w=1200&auto=format&fit=crop", at: Date.now()-3600_000*6, sightings:[]},
-    {id:crypto.randomUUID(), type:"Found", name:"—", breed:"Cat", location:"Whitefield", marks:"Orange tabby", img:"https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?q=80&w=1200&auto=format&fit=crop", at: Date.now()-3600_000*30, sightings:["Seen near forum mall"]}
-  ];
-  localStorage.setItem("petverse.seeded","1"); persist();
-}
-
-/* =========================
-   Tabs
-   ========================= */
-const tabs = document.querySelectorAll(".tab");
-const panels = ["adopt","donate","forum","events","lost","profile"].map(id=>document.getElementById(id));
-tabs.forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    tabs.forEach(b=> b.setAttribute("aria-selected", b===btn ? "true":"false"));
-    const tabId = btn.dataset.tab;
-    panels.forEach(p=> p.hidden = p.id !== tabId);
-    if(tabId==="adopt") updateAdoptProgress();
-  });
-});
-
-/* =========================
-   ADOPTION
-   ========================= */
-const petCards = document.getElementById("petCards");
-function renderPets(){
-  const q = document.getElementById("adoptSearch").value.toLowerCase();
-  const sp = document.getElementById("adoptFilterSpecies").value;
-  const st = document.getElementById("adoptFilterStatus").value;
-  petCards.innerHTML = "";
-  const filtered = State.pets.filter(p=>(!sp||p.species===sp)&&(!st||p.status===st)&&([p.name,p.breed,p.species].join(" ").toLowerCase().includes(q)));
-  for(const p of filtered){
-    const card = document.createElement("article");
-    card.className = "card"; card.setAttribute("aria-label", `${p.name} ${p.breed}`);
-    card.innerHTML = `
-      <img alt="${p.name}" src="${p.img}" onerror="this.style.display='none'">
-      <div class="content">
-        <div class="row" style="justify-content:space-between; align-items:center">
-          <strong style="font-size:18px">${p.name}</strong>
-          <span class="badge status ${p.status}" role="button" title="Click to change status">${p.status}</span>
-        </div>
-        <div class="pill-group">
-          <span class="pill">${p.species}</span>
-          <span class="pill">${p.breed}</span>
-          <span class="pill">${p.age}</span>
-          <span class="pill">${p.vaccinated ? "Vaccinated ✅" : "Not vaccinated ⚠️"}</span>
-        </div>
-        <div class="row">
-          <button class="btn adopt" aria-label="Request adoption">Request adoption</button>
-          <button class="btn-outline contact">Contact</button>
-          <button class="btn-ghost delete" title="Delete">🗑</button>
-        </div>
-      </div>
-    `;
-    card.querySelector(".adopt").addEventListener("click", ()=>{
-      if(p.status==="Available"){ p.status="Requested"; toast("Adoption requested. Owner notified."); logActivity(`Requested adoption for ${p.name}`); }
-      else toast("Request noted.");
-      persist(); renderPets(); updateAdoptProgress();
-    });
-    card.querySelector(".contact").addEventListener("click", ()=>{
-      alert(`Contact preference: ${State.profile.contact}\nWe'll share your interest with the owner/shelter.`);
-    });
-    card.querySelector(".delete").addEventListener("click", ()=>{
-      if(confirm("Remove this pet listing?")){ State.pets = State.pets.filter(x=>x.id!==p.id); persist(); renderPets(); updateAdoptProgress(); }
-    });
-    card.querySelector(".status").addEventListener("click", ()=>{
-      const order = ["Available","Requested","Approved","Adopted"];
-      const i = order.indexOf(p.status);
-      p.status = order[(i+1)%order.length];
-      persist(); renderPets(); updateAdoptProgress();
-    });
-    petCards.appendChild(card);
-  }
-  if(!filtered.length){ petCards.innerHTML = `<div class="empty">No pets match filters.</div>`; }
-}
-function updateAdoptProgress(){
-  const total = State.pets.length || 1;
-  const adopted = State.pets.filter(p=>p.status==="Adopted").length;
-  document.getElementById("adoptProgress").style.width = Math.round((adopted/total)*100)+"%";
-}
-["adoptSearch","adoptFilterSpecies","adoptFilterStatus"].forEach(id=> document.getElementById(id).addEventListener("input", renderPets));
-document.getElementById("newPetBtn").addEventListener("click", ()=>{
-  const name = prompt("Pet name?"); if(!name) return;
-  const species = prompt("Species (Dog/Cat/Bird)?") || "Dog";
-  const breed = prompt("Breed?") || "Indie";
-  const age = prompt("Age (e.g., 1y)") || "1y";
-  const vaccinated = confirm("Vaccinated?");
-  const img = prompt("Image URL (optional)") || "";
-  State.pets.unshift({id:crypto.randomUUID(), name, species, breed, age, vaccinated, status:"Available", img});
-  persist(); renderPets(); toast("Pet posted!");
-});
-renderPets();
-
-/* =========================
-   DONATIONS
-   ========================= */
-const needsList = document.getElementById("needsList");
-function renderNeeds(){
-  needsList.innerHTML = "";
-  for(const n of State.needs){
-    const pct = Math.min(100, Math.round((n.progress / n.goal)*100));
-    const card = document.createElement("article");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="content">
-        <div class="row" style="justify-content:space-between; align-items:center">
-          <div><strong>${n.title}</strong><div class="muted" style="color:var(--muted)">${n.org} • ${n.type==="item"?"Item":"Money"}</div></div>
-          <button class="btn-ghost remove" title="Remove">🗑</button>
-        </div>
-        <div class="progress" aria-label="Donation progress"><i style="width:${pct}%"></i></div>
-        <small class="muted">${n.type==="money"?"₹":""}${n.progress} / ${n.type==="money"?"₹":""}${n.goal}</small>
-        <div class="row">
-          <input class="pledge" type="number" min="1" placeholder="${n.type==="money"?"Amount ₹":"Units"}" aria-label="Pledge amount">
-          <button class="btn confirm">Donate</button>
-          <button class="btn-outline receipt">Get receipt</button>
-        </div>
-        <small class="muted">Contact: ${n.contact}</small>
-      </div>
-    `;
-    card.querySelector(".confirm").addEventListener("click", ()=>{
-      const val = Number(card.querySelector(".pledge").value || "0");
-      if(val<=0) return alert("Enter a valid amount/units.");
-      n.progress = Math.min(n.goal, n.progress + val);
-      toast("Donation recorded. Thank you!");
-      logActivity(`Donated ${n.type==="money"?"₹":""}${val} to ${n.title}`);
-      persist(); renderNeeds();
-    });
-    card.querySelector(".receipt").addEventListener("click", ()=>{
-      alert(`Receipt\nDonor: ${State.profile.name}\nFor: ${n.title}\nOrg: ${n.org}\nThank you!`);
-    });
-    card.querySelector(".remove").addEventListener("click", ()=>{
-      if(confirm("Remove this need?")){ State.needs = State.needs.filter(x=>x.id!==n.id); persist(); renderNeeds(); }
-    });
-    needsList.appendChild(card);
-  }
-  if(!State.needs.length) needsList.innerHTML = `<div class="empty">No active needs. Add one →</div>`;
-}
-document.getElementById("addNeed").addEventListener("click", ()=>{
-  const t = document.getElementById("needTitle").value.trim();
-  const o = document.getElementById("needOrg").value.trim();
-  const c = document.getElementById("needContact").value.trim();
-  const g = Number(document.getElementById("needGoal").value);
-  const ty = document.getElementById("needType").value;
-  if(!t || !o || !c || !g) return alert("Fill all fields.");
-  State.needs.unshift({id:crypto.randomUUID(), title:t, org:o, contact:c, type:ty, goal:g, progress:0});
-  ["needTitle","needOrg","needContact","needGoal"].forEach(id=> document.getElementById(id).value="");
-  persist(); renderNeeds(); toast("Need posted.");
-});
-renderNeeds();
-
-/* =========================
-   FORUM (Post + Comments)
-   ========================= */
-function renderPosts(){
-  const box = document.getElementById("posts");
-  box.innerHTML = "";
-  const byChannel = (ch)=> State.posts.filter(p=>p.channel===ch).sort((a,b)=>b.at-a.at);
-  const channels = ["General","Lost Pets","Adoption Help","Health","Training"];
-  for(const ch of channels){
-    const wrap = document.createElement("section");
-    wrap.className = "panel";
-    wrap.innerHTML = `<h3>${ch}</h3>`;
-    const set = byChannel(ch);
-    if(!set.length){ wrap.innerHTML += `<div class="empty">No posts in ${ch}.</div>`; }
-    for(const p of set){
-      const article = document.createElement("article");
-      article.className = "panel";
-      article.innerHTML = `
-        <div class="row" style="justify-content:space-between">
-          <strong>${p.title}</strong>
-          <button class="btn-ghost del">🗑</button>
-        </div>
-        <p>${p.body}</p>
-        <small class="muted">${new Date(p.at).toLocaleString()}</small>
-        <details style="margin-top:8px"><summary>Comments (${p.comments.length})</summary>
-          <div class="grid" style="margin-top:8px">
-            ${p.comments.map(c=>`<div class="panel" style="padding:8px">${c}</div>`).join("")}
-            <div class="row">
-              <input class="cbody" placeholder="Write a comment…" />
-              <button class="btn cadd">Add</button>
-            </div>
-          </div>
-        </details>
-      `;
-      article.querySelector(".del").addEventListener("click", ()=>{
-        if(confirm("Delete post?")){ State.posts = State.posts.filter(x=>x.id!==p.id); persist(); renderPosts(); }
-      });
-      article.querySelector(".cadd").addEventListener("click", ()=>{
-        const v = article.querySelector(".cbody").value.trim(); if(!v) return;
-        p.comments.push(v); persist(); renderPosts();
-      });
-      wrap.appendChild(article);
-    }
-    box.appendChild(wrap);
-  }
-}
-document.getElementById("addPost").addEventListener("click", ()=>{
-  const ch = document.getElementById("channel").value;
-  const t = document.getElementById("postTitle").value.trim();
-  const b = document.getElementById("postBody").value.trim();
-  if(!t || !b) return alert("Add title and body.");
-  State.posts.unshift({id:crypto.randomUUID(), channel:ch, title:t, body:b, comments:[], at:Date.now()});
-  document.getElementById("postTitle").value=""; document.getElementById("postBody").value="";
-  persist(); renderPosts();
-});
-renderPosts();
-
-/* =========================
-   EVENTS / VOLUNTEERING
-   ========================= */
-const eventCards = document.getElementById("eventCards");
-function renderEvents(){
-  eventCards.innerHTML = "";
-  for(const e of State.events.sort((a,b)=> (a.date>b.date?1:-1))){
-    const card = document.createElement("article");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="content">
-        <div class="row" style="justify-content:space-between; align-items:center">
-          <div><strong>${e.title}</strong><div class="muted" style="color:var(--muted)">${e.org} • ${e.location}</div></div>
-          <button class="btn-ghost remove" title="Remove">🗑</button>
-        </div>
-        <p>${e.desc}</p>
-        <div class="pill-group">
-          <span class="pill">🗓 ${e.date}</span>
-          <span class="pill">👥 ${e.volunteers} volunteers</span>
-        </div>
-        <div class="row">
-          <button class="btn join">Register as volunteer</button>
-          <button class="btn-outline share">Share</button>
-        </div>
-      </div>
-    `;
-    card.querySelector(".join").addEventListener("click", ()=>{
-      e.volunteers += 1; State.profile.hours += 2;
-      if(State.profile.hours>=2 && !State.profile.badges.includes("Helper")) State.profile.badges.push("Helper");
-      if(State.profile.hours>=10 && !State.profile.badges.includes("Rescuer")) State.profile.badges.push("Rescuer");
-      if(State.profile.hours>=25 && !State.profile.badges.includes("Champion")) State.profile.badges.push("Champion");
-      toast("Registered. 2 volunteer hours added!");
-      logActivity(`Registered for ${e.title}`);
-      persist(); renderEvents(); renderProfile();
-    });
-    card.querySelector(".share").addEventListener("click", ()=>{
-      navigator.clipboard?.writeText(`${e.title} on ${e.date} at ${e.location}`); toast("Event details copied.");
-    });
-    card.querySelector(".remove").addEventListener("click", ()=>{
-      if(confirm("Delete event?")){ State.events = State.events.filter(x=>x.id!==e.id); persist(); renderEvents(); }
-    });
-    eventCards.appendChild(card);
-  }
-  if(!State.events.length) eventCards.innerHTML = `<div class="empty">No upcoming events.</div>`;
-}
-document.getElementById("addEvent").addEventListener("click", ()=>{
-  const t = document.getElementById("evTitle").value.trim();
-  const o = document.getElementById("evOrg").value.trim();
-  const d = document.getElementById("evDate").value;
-  const l = document.getElementById("evLocation").value.trim();
-  const ds= document.getElementById("evDesc").value.trim();
-  if(!t || !o || !d || !l) return alert("Fill all required fields.");
-  State.events.push({id:crypto.randomUUID(), title:t, org:o, date:d, location:l, desc:ds, volunteers:0});
-  ["evTitle","evOrg","evDate","evLocation","evDesc"].forEach(id=> document.getElementById(id).value="");
-  persist(); renderEvents(); toast("Event created.");
-});
-renderEvents();
-
-/* =========================
-   LOST & FOUND
-   ========================= */
-function renderLost(){
-  const list = document.getElementById("lostList");
-  const q = document.getElementById("lostSearch").value.toLowerCase();
-  const sort = document.getElementById("lostSort").value;
-  let items = State.lost.filter(x=> [x.name,x.breed,x.location,x.marks].join(" ").toLowerCase().includes(q));
-  items.sort((a,b)=> sort==="newest" ? b.at - a.at : a.at - b.at);
-  list.innerHTML = "";
-  for(const it of items){
-    const card = document.createElement("article");
-    card.className="card";
-    card.innerHTML = `
-      ${it.img?`<img alt="pet" src="${it.img}" onerror="this.style.display='none'">`:``}
-      <div class="content">
-        <div class="row" style="justify-content:space-between; align-items:center">
-          <strong>${it.type}: ${it.name || "Unknown"}</strong>
-          <button class="btn-ghost rem">🗑</button>
-        </div>
-        <div class="pill-group">
-          <span class="pill">${it.breed}</span>
-          <span class="pill">📍 ${it.location}</span>
-          <span class="pill">${new Date(it.at).toLocaleString()}</span>
-        </div>
-        <p>Marks: ${it.marks || "—"}</p>
-        <details style="margin-top:6px">
-          <summary>Sightings (${it.sightings.length})</summary>
-          <div class="grid" style="margin-top:8px">
-            ${it.sightings.map(s=>`<div class="panel" style="padding:8px">${s}</div>`).join("")}
-            <div class="row">
-              <input class="s" placeholder="Add sighting…" />
-              <button class="btn addS">Add</button>
-            </div>
-          </div>
-        </details>
-      </div>
-    `;
-    card.querySelector(".addS").addEventListener("click", ()=>{
-      const v = card.querySelector(".s").value.trim(); if(!v) return;
-      it.sightings.push(v); persist(); renderLost();
-    });
-    card.querySelector(".rem").addEventListener("click", ()=>{
-      if(confirm("Delete post?")){ State.lost = State.lost.filter(x=>x.id!==it.id); persist(); renderLost(); }
-    });
-    list.appendChild(card);
-  }
-  if(!items.length) list.innerHTML = `<div class="empty">No posts yet. Add one →</div>`;
-}
-document.getElementById("addLost").addEventListener("click", ()=>{
-  const type = document.getElementById("lostType").value;
-  const name = document.getElementById("lostPetName").value.trim();
-  const breed= document.getElementById("lostBreed").value.trim() || "Unknown";
-  const loc  = document.getElementById("lostLocation").value.trim();
-  const mk   = document.getElementById("lostMarks").value.trim();
-  const img  = document.getElementById("lostImage").value.trim();
-  if(!breed || !loc) return alert("Add breed/type and location.");
-  State.lost.unshift({id:crypto.randomUUID(), type, name, breed, location:loc, marks:mk, img, at: Date.now(), sightings:[]});
-  ["lostPetName","lostBreed","lostLocation","lostMarks","lostImage"].forEach(id=> document.getElementById(id).value="");
-  persist(); renderLost(); toast("Post added.");
-});
-["lostSearch","lostSort"].forEach(id=> document.getElementById(id).addEventListener("input", renderLost));
-renderLost();
-
-/* =========================
-   PROFILE
-   ========================= */
-function renderProfile(){
-  const p = State.profile;
-  document.getElementById("pfName").value = p.name || "";
-  document.getElementById("pfLocation").value = p.location || "";
-  document.getElementById("pfContact").value = p.contact || "in-app";
-  const ul = document.getElementById("activity");
-  ul.innerHTML = State.activity.slice(0,10).map(a=> `<li>• ${a.msg} <span style="color:var(--muted)">(${a.at})</span></li>`).join("") || `<li class="empty">No activity yet.</li>`;
-  const badges = document.getElementById("badges");
-  badges.innerHTML = (p.badges||[]).map(b=> `<span class="pill">${b}</span>`).join("") || `<span class="pill">No badges yet</span>`;
-}
-document.getElementById("saveProfile").addEventListener("click", ()=>{
-  State.profile.name = document.getElementById("pfName").value.trim() || "Guest";
-  State.profile.location = document.getElementById("pfLocation").value.trim();
-  State.profile.contact = document.getElementById("pfContact").value;
-  persist(); toast("Profile saved.");
-});
-renderProfile();
-
-/* =========================
-   Accessibility niceties
-   ========================= */
-document.addEventListener("keydown", (e)=>{
-  if(e.key.toLowerCase()==="k" && (e.ctrlKey||e.metaKey)){
-    e.preventDefault(); document.getElementById("adoptSearch").focus(); toast("Focused search (Adopt).");
-  }
-});
-</script>
+  <footer>
+    <p>© 2025 PetPal | Adopt. Love. Care. 🐾</p>
+  </footer>
 </body>
 </html>
